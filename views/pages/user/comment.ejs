@@ -1,0 +1,62 @@
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;400;500;600&display=swap" rel="stylesheet">
+<%- /* Expose locals as 'window.SAILS_LOCALS' :: */ exposeLocalsToBrowser({keys: ['post']})%>
+<%- partial('../../partials/navbar.ejs') %>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<div id="app" v-for= "p in [post]" style= "font-family: 'Montserrat', sans-serif; padding: 50px">
+  <div class="" style= "background-color: white; padding: 15px; border-radius: 10px; width: 55%; margin: 20px auto; height: auto;">
+    <%- partial('../../partials/postBody') %>
+  </div>
+  <div style="text-align: center">
+    <form :action ="'/post/comment/' + post.id" method= "POST">
+      <div class="" style="background-color: white; height: 150px; position: relative; width: 55%; margin: 10px auto; border-radius: 10px; padding: 10px">
+        <textarea name="commentText" id="comment" placeholder="Enter your comment" style="height: 70px; width: 90%; display: inline-block; border-radius: 10px; padding: 10px; font-family: 'Montserrat', sans-serif; border: none; background: #D3D3D3"></textarea>
+        <div style="display: flex">
+          <button type="submit" style="text-alignment: center; font-size: 20px; border-radius: 10px; margin-top: 10px; height: 40px; width: auto; color: white; background-color: #4CAF50; border: none; font-family: 'Montserrat', sans-serif; font-weight: 200; position: absolute; bottom: 8px; right: 8px">Comment</button>
+        </div>
+      </div>
+    </form>
+    <br>
+    <div style="font-weight: bold; float: left; width: 55%; font-size: 30px">
+      Comments ({{post.comments.length}}):
+    </div>
+    <br>
+    <div v-for="c in post.comments">
+      <div style="background-color: white; margin: 0 auto; height: auto; width: 55%; border-radius: 10px">
+        <div style="margin: 30px; padding: 20px">
+          <div style="display: inline-block; float: left">
+
+            <div style="display: flex;">
+              <img :src="c.user.profileImageUrl" style="width: 55px; height: 55px; object-position: center; object-fit: cover; border-radius: 100px; border: 1px solid black">
+              <div style="flex-direction: column; font-weight: bolder; padding: 15px">
+                {{c.user.fullName}}
+                <div style="font-size: 12px; font-color: #D3D3D3; font-weight: 150">
+                  <!-- {{"Posted at :" + " "+ new Date(p.createdAt).toLocaleTimeString() + " , " + new Date(p.createdAt).toLocaleDateString()}} -->
+                  Posted {{c.fromNow}}
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <br><br>
+          <div style="padding: 10px; text-align: left ">
+            <div style="padding-top: 30px">
+              {{c.text}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<script>
+  const app = new Vue({
+    el: "#app",
+    data: {
+      message : "Vue Application",
+      post: window.SAILS_LOCALS.post
+    }
+  })
+</script>

@@ -1,0 +1,108 @@
+
+
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+	<div class="limiter">
+
+		<div class="container-login100">
+
+			<div class="wrap-login100">
+
+				<div class="center">
+					<img src="/images/logo12.png" style=" width: 270px; padding-bottom: 5px">
+				</div>
+
+
+				<form class="login100-form validate-form" action="" method="">
+					<span class="login100-form-title p-b-26">
+						NEPGRAM
+					</span>
+
+					<div class="wrap-input100 validate-input" data-validate = "Valid email is: a@b.c">
+						<input id="emailAddressID"class="input100" type="text" name="emailAddress">
+						<span class="focus-input100" data-placeholder="Email"></span>
+					</div>
+
+					<div class="wrap-input100 validate-input" data-validate="Enter password">
+						<span class="btn-show-pass">
+							<i class="zmdi zmdi-eye"></i>
+						</span>
+						<input id="passwordID" class="input100" type="password" name="password">
+						<span class="focus-input100" data-placeholder="Password"></span>
+					</div>
+
+					<div class="container-login100-form-btn">
+						<div class="wrap-login100-form-btn">
+							<div class="login100-form-bgbtn"></div>
+							<button class="login100-form-btn" type="button" onClick="buttonAction()">
+								Login
+							</button>
+						</div>
+					</div>
+
+					<div class="text-center p-t-115">
+						<span class="txt1">
+							Don’t have an account?
+						</span>
+
+						<a class="txt2" href="#">
+							Sign Up
+						</a>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+
+	<div id="dropDownSelect1"></div>
+
+<!--===============================================================================================-->
+	<script src="/vendor/jquery/jquery-3.2.1.min.js"></script>
+<!--===============================================================================================-->
+	<script src="/vendor/animsition/js/animsition.min.js"></script>
+<!--===============================================================================================-->
+	<script src="/vendor/bootstrap/js/popper.js"></script>
+	<script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+	<script src="/vendor/select2/select2.min.js"></script>
+<!--===============================================================================================-->
+	<script src="/vendor/daterangepicker/moment.min.js"></script>
+	<script src="/vendor/daterangepicker/daterangepicker.js"></script>
+<!--===============================================================================================-->
+	<script src="/vendor/countdowntime/countdowntime.js"></script>
+<!--===============================================================================================-->
+	<script src="/js/main.js"></script>
+
+
+ <!--yo cchahe put req garna lai gareyko usinf third party library call "axios" yesko cdn chahe layout ma cha-->
+	<script>
+
+			async function buttonAction(){
+
+				console.log("trying to login...")
+				const email = document.getElementById('emailAddressID').value
+				const pass = document.getElementById('passwordID').value
+
+				const formData= new FormData()
+				formData.append('emailAddress', email)
+				formData.append('password',pass)
+
+
+				try {
+
+							const response = await axios.put('/api/v1/entrance/login', formData)
+							document.location = "/post"
+
+				} catch (e) {
+
+						console.error(e.toString());
+
+				}
+
+			}
+	</script>

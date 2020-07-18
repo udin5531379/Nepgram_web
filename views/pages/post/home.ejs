@@ -1,0 +1,200 @@
+
+<html lang="en" dir="ltr">
+  <head>
+    <link rel="stylesheet" href="../../styles/home/home.css" type="text/css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;400;500;600&display=swap" rel="stylesheet">
+    <meta charset="utf-8">
+    <title>this is loaded from home.js</title>
+  </head>
+  <body>
+    <%- partial('../../partials/navbar.ejs') %>
+    <div style="padding: 30px">
+
+      <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+        <div id= "app" v-cloak>
+
+                  <!For the create Post modal>
+
+                  <div v-if="modalToCreatePost" class="modalToCreate">
+                      <div class="flex-container">
+                        <div class="contentsInsidePostModal" style="background-color: white; width: 400px; min-height: 200px; margin: 10px auto; display: block; border-radius: 10px; position: relative">
+                            <textarea v-model="postBodyText" placeholder="Write Something..." name="name" rows="8" cols="80" style="font-family: 'Montserrat', sans-serif"></textarea>
+                             <br><br><br>
+                             <!yo chahe image select garney ra display in the UI>
+                             <div>
+                               <img id="selectedImage" :src="postFileImageSource" style="max-width: 80%; margin: 70px auto; padding: 20px; border-radius: 10px; display: none; height: 300px"/>
+                             </div>
+                             <div>
+                               <!-- <label class="chooseAPicture">
+                                 <input v-on:change="handleFileChange" type="file" name="imagefile"></input>
+                               </label> -->
+                               <div class="image-upload">
+                                 <label class="chooseAPicture" for="file-input">
+                                  <img id= "uploadIcon" src="/images/upload.png"/>
+                                  </label>
+                                <input id="file-input" type="file" v-on:change="handleFileChange" type="file" name="imagefile"/>
+                               </div>
+
+                               <button v-if="isPostButtonActive" v-on:click="createPostButtonInsideModal()" type="button" name="button" class="postButton">Post</button>
+                               <button v-if="isCancelButtonActive"v-on:click="cancelButtonInsideModal()" type="button" name="button" class="cancelButtonInsideModalForPost">Cancel</button>
+                             </div>
+                        </div>
+                      </div>
+                  </div>
+
+                  <!for loading sign>
+
+                  <div style="height: 100%; width: 100%; background-color: white">
+                    <div id="loader"></div>
+                  </div>
+
+                  <!For the create button>
+
+                  <div class= "createButtonAttheTopInHomePage" style="margin-top: 30px">
+
+                    <button v-on:click="createPostButtonToOpenModal()"  type="button" name="button" class="createButton"  style="width: 100%; padding: 10px;margin: 10px; background-color: grey;font-size: 20px; font-weight: 100px; border-radius: 10px; color: white; "> CREATE POST </button>
+
+                  </div>
+
+
+
+
+          <! for each of the post uploading in the home>
+
+          <div v-for="p in posts" style="font-family: 'Montserrat', sans-serif">
+
+            <!yo chahe delete ko modal"Are you sure you want to delete ?">
+
+            <div id="myModal" class="modal">
+              <div class="modal-content" style="border-radius: 10px">
+                <div class="modal-header">
+                 <span v-on:click="cancelButtonInsideModal()" class="close">&times;</span>
+                  <h2 style="color: black">Do you want to delete this post?</h2>
+                </div>
+                <div class="modal-body">
+                  <button v-on:click="deleteButtonInsideModal(p)" class="Button" type="button" style="margin: 10px; background-color: #B93838; color: white; height: 50px; width: 100px; border-radius: 10px"> Delete </button>
+                  <button v-on:click="cancelButtonInsideModal()"class="Button" type="button" style="margin: 10px; background-color: Lightgrey; height: 50px; width: 100px; border-radius: 10px">Cancel</button>
+                </div>
+              </div>
+            </div>
+
+            <br><br>
+
+            <!yo chahe upload to server and display the text and images part>
+
+            <%- partial('../../partials/postBody.ejs') %>
+
+          </div>
+
+
+          </div>
+
+        <%- /* Expose locals as 'window.SAILS_LOCALS' :: */ exposeLocalsToBrowser({keys: ['allPosts']}) %>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script>
+
+          var app = new Vue ({
+
+          el: '#app',
+
+          data: {
+
+            posts: window.SAILS_LOCALS.allPosts,
+            modalToCreatePost: false,
+            postBodyText: null,
+            selectedFile: null,
+            postFileImageSource: null,
+            isPostButtonActive: true,
+            isCancelButtonActive: true
+
+          },
+
+          methods: {
+            // upload garney ra display garauney UI ma code backend
+            handleFileChange: function(event) {
+                this.selectedFile = event.target.files[0]
+                this.postFileImageSource = window.URL.createObjectURL(this.selectedFile)
+                document.getElementById('selectedImage').style.display = 'block'
+            },
+
+            createPostButtonInsideModal: async function() {
+              this.isPostButtonActive = false
+              this.isCancelButtonActive = false
+              document.getElementById('loader').style.display = 'block'
+              console.log("Create Post")
+              const formData = new FormData()
+              formData.append("postBody", this.postBodyText)
+              formData.append('imagefile', this.selectedFile)
+              try {
+                await axios.post('/post', formData)
+                document.getElementById('loader').style.display = 'none'
+                location.reload()
+              } catch (e) {
+                console.error(e.toString())
+                document.getElementById('loader').style.display = 'none'
+              }
+
+            },
+
+            openModal : function() {
+
+              console.log("opening model")
+              document.getElementById('myModal').style.display = 'block'
+
+            },
+
+            deleteButtonInsideModal : async function(post) {
+
+              console.log("Delete button pressed")
+              document.getElementById('loader').style.display = 'block'
+              try {
+                //removing this from the server
+                const postId = post.id
+                await axios.delete(`/post/${postId}`)
+
+                //to remove this from the html like UI removing from UI ie browser
+                this.posts = this.posts.filter(p => {
+
+                  console.log(p.id)
+                  console.log(post.id)
+                  return p.id != post.id
+
+                })
+
+                document.getElementById('myModal').style.display = 'none'
+                document.getElementById('loader').style.display = 'none'
+
+              } catch (err) {
+
+                console.log(err.toString())
+                document.getElementById('loader').style.display = 'none'
+
+              }
+
+            },
+
+            cancelButtonInsideModal: function() {
+
+              console.log("Cancel Button Pressed")
+              document.getElementById('myModal').style.display = 'none'
+              this.modalToCreatePost = false
+
+            },
+
+            createPostButtonToOpenModal: function() {
+
+              this.modalToCreatePost= true
+
+            }
+
+          }
+
+        })
+
+        </script>
+
+
+    </div>
+  </body>
+</html>

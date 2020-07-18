@@ -1,0 +1,33 @@
+
+<div class="container">
+
+  <div style="display: flex">
+    <img :src="p.user.profileImageUrl" style="width: 55px; height: 55px; object-position: center; object-fit: cover; border-radius: 100px; border: 1px solid black; margin-left: 10px; margin-top: 10px">
+    <div style="flex-direction: column; font-weight: bolder; padding: 15px">
+      {{p.user.fullName}}
+      <div style="font-size: 12px; font-color: #D3D3D3; font-weight: 150">
+        <!-- {{"Posted at :" + " "+ new Date(p.createdAt).toLocaleTimeString() + " , " + new Date(p.createdAt).toLocaleDateString()}} -->
+        Posted {{p.fromNow}}
+      </div>
+    </div>
+  </div>
+
+  <div style="font-weight: bolder; padding: 10px">
+      <div style="display: flex; display: -webkit-flex; display: -webkit-box; display: -ms-flexbox; ">
+        <img style="display: block; margin-left: auto; margin-right: auto; width: 50%; max-width: 300px" :src="p.imageUrl"/>
+      </div>
+      <br>
+</div>
+  <div style="font-weight: 200; padding: 10px">
+    {{p.text}}
+  </div>
+
+  <div style="padding: 10px">
+    <a :href="'/post/' + p.id"> View Comments </a>
+  </div>
+
+  <br><br>
+  <div>
+    <button v-if="p.canDelete" v-on:click= "openModal()" type="button" name="button" class="deleteButton" style="position: absolute; bottom: 8px; right: 8px; padding-top: 10px"> Delete Post</button>
+  </div>
+</div>

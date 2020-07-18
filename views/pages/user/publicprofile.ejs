@@ -1,0 +1,97 @@
+<%- partial('../../partials/navbar.ejs') %>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<%- /* Expose locals as 'window.SAILS_LOCALS' :: */ exposeLocalsToBrowser({keys: ['user']}) %>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;400;500;600&display=swap" rel="stylesheet">
+
+<style media="screen">
+
+  .first{
+    padding: 30px;
+  }
+
+  .row {
+    display: flex;
+    max-width: 500px;
+    margin: 0 auto;
+
+  }
+
+  /* Create two equal columns that sits next to each other */
+  .column {
+  	text-align: center;
+    flex: 50%;
+    padding: 10px;
+    margin: 10px;
+    height: 300px;
+    overflow: scroll;
+   border-radius: 10px
+  }
+
+
+
+    .container{
+      background-color: white;
+      padding: 12px;
+      border-radius: 10px;
+      position: relative;
+      width: 60%;
+      margin: 10px auto;
+    }
+
+</style>
+
+<br><br>
+<div id="app" class="first" style="font-family: 'Montserrat', sans-serif;">
+  <div class="" style="background-color: white; padding: 24px; text-align: center; width: 30%; margin: 10px auto; border-radius: 10px">
+      <div style="display: flex; margin: 5px">
+        <div class="" style="margin: 0 auto; justify-content: center">
+          <div class="" style="font-weight: bold">
+            {{user.fullName}}
+          </div>
+          <div class="" style="font-weight: lighter">
+            {{user.emailAddress}}
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <br><br>
+
+    <div class="row">
+      <div class="column" style="background-color: white">
+        <h2 style="border-bottom: solid 2px #000000; padding-bottom: 10px;">Following</h2>
+        <div v-if="user.following.length == 0" style="margin: 30px">User is not following anyone</div>
+        <div v-else v-for="u in user.following" style="font-weight: light; margin: 15px">
+          {{u.fullName}}
+        </div>
+      </div>
+      <div class="column" style="background-color:rgba(255,255,255,0.7);">
+        <h2 style="border-bottom: solid 2px #000000; padding-bottom: 10px;">Followers</h2>
+        <div v-if="user.followers.length == 0" style="margin: 30px">User does not have any followers</div>
+        <div v-else v-for="v in user.followers" style="font-weight: light; margin: 15px">
+          {{v.fullName}}
+        </div>
+      </div>
+    </div>
+
+    <br><br>
+
+<h1>{{user.fullName}}'s Posts:</h1>
+    <div v-for="p in user.posts">
+      <%- partial('../../partials/postBody') %>
+    </div>
+
+  </div>
+<script>
+
+
+
+    const app = new Vue({
+      el: '#app',
+      data: {
+      user: window.SAILS_LOCALS.user //this user is from publicpost.js
+
+      }
+    })
+</script>

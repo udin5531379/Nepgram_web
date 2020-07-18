@@ -1,0 +1,160 @@
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<%- partial('../../partials/navbar.ejs') %>
+<%- /* Expose locals as 'window.SAILS_LOCALS' :: */ exposeLocalsToBrowser({keys: ['users']}) %>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;400;500;600&display=swap" rel="stylesheet">
+
+<style media="screen">
+h1 {
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
+    padding-top: 10px;
+
+  }
+
+.imageFriendswithH1{
+  display: flex;
+  justify-content: center;
+}
+
+#friendsIcon{
+  width: 100px;
+  height: 100px;
+  margin-top: 70px;
+  margin-right: 20px;
+}
+
+.followingButton{
+  position: absolute; right: 0; bottom: 0;background-color:white;
+  border-radius:28px;
+  border:1px solid #000000;
+  cursor:pointer;
+  color: black;
+  font-size:13px;
+  padding:10px 21px;
+  text-decoration:none;
+  margin-top: 11px;
+  transition: transform .2s;
+}
+
+.followingButton:hover{
+  transform: scale(1.08);
+}
+
+.unfollowingButton{
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  background-color:black;
+  border-radius:28px;
+  border:1px solid #000000;
+  cursor:pointer;
+  color: white;
+  font-size:13px;
+  padding:10px 21px;
+  text-decoration:none;
+  margin-top: 11px;
+  transition: transform .2s;
+}
+.unfollowingButton:hover{
+  transform: scale(1.08);
+}
+
+
+#loader{
+    position:fixed;
+    width:100%;
+    left:0;right:0;top:0;bottom:0;
+    background-color: rgba(0,0,0,0.2);
+    z-index:9999;
+    display:none;
+}
+
+#loader:after {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 100px;
+  height: 100px;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #777777;
+  width: 120px;
+  height: 120px;
+  -webkii-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+  box-shadow: 0px 10px 10px 10px rgba(0, 0, 0, 0.2), 0 6px 20px 10px rgba(0, 0, 0, 0.19);
+
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: roatate(360deg); }
+}
+ @keyframes spin {
+   0% {transform: rotate(0deg); }
+   100% {transform: rotate(360deg); }
+ }
+
+</style>
+
+<!-- loader -->
+<div id="loader"></div>
+
+
+<div class="imageFriendswithH1">
+  <img id="friendsIcon" src="/images/friends.png" alt="">
+  <div style="display: flex; justify-content: center; margin-top: 70px">
+    <h1 style="font-weight: 200">Follow your friends !</h1>
+  </div>
+</div>
+
+
+<div id="app" style="margin: 20px auto; font-family: 'Montserrat', sans-serif; width: 70%; ">
+  <div v-for="u in user" v-bind:key="u.id" style="background-color: white; padding: 15px; margin: 10px; border-radius: 10px">
+
+    <a :href="'/user/' + u.id" style=" text-decoration: none,  ">
+    <div style="font-weight: bold; color: black" onMouseOver="this.style.color='rgba(0,0,0,0.7)'" onmouseout="this.style.color='black'">
+      <u >{{u.fullName}}</u>
+    </div>
+    </a>
+
+    <div style="font-weight: lighter">
+      {{u.emailAddress}}
+    </div>
+    <div style="position: relative; margin-bottom: 10px">
+      <button v-on:click="followButton(u)" type="button" name="button" v-bind:class="u.isFollowing ? 'unfollowingButton':'followingButton'">{{u.isFollowing ? 'Unfollow':'Follow'}}</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+  const allUser = window.SAILS_LOCALS.users
+  var app = new Vue({
+  el: '#app',
+  data: {
+    user: allUser,
+  },
+  methods: {
+    followButton: async function(user) {
+        document.getElementById('loader').style.display = 'block'
+        console.log(user.fullName)
+
+        if (user.isFollowing){ //true bhayesi button ma unfollow bhaneyra aaucha which feri click garda unfollowing routes huncha
+          await axios.post("unfollowing/"+user.id)
+        } else {
+          await axios.post("following/"+user.id) //false bhaeysi button ma follow bhanney huncha which button ma click following routes ma jancha
+        }
+
+              //this will force the UI to toggle between follow and unfollow button
+              const originalId = user.id
+              user.id = "temp"
+              user.isFollowing = !(user.isFollowing)
+              user.id = originalId
+              document.getElementById('loader').style.display = 'none'
+        }
+  }
+})
+</script>

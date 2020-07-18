@@ -1,0 +1,93 @@
+<style media="screen">
+
+[v-cloak] {
+display:none;
+}
+
+.container{
+    background-color: white;
+    padding: 12px;
+    border-radius: 10px;
+    position: relative;
+    width: 50%;
+    margin: 10px auto;
+}
+</style>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;400;500;600&display=swap" rel="stylesheet">
+<%- /* Expose locals as 'window.SAILS_LOCALS' :: */ exposeLocalsToBrowser({keys: ['user']}) %>
+<%- partial('../../partials/navbar.ejs') %>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+<div id= "app" style="font-family: 'Montserrat', sans-serif;">
+<br><br>
+<div class="container">
+<h8 style="font-weight: bold; padding-top: -20px; padding-left: 20px">Account Settings</h8>
+<div>
+  <div style = "padding-top: 15px; padding-left: 30px">
+    Email Address:
+  <div style="padding-left: 150px; margin-top: -20px;"> {{user.emailAddress}} </div>
+  <form class="" action="#" method="post">
+    <label for="userName">User Name:</label>
+    <input style="padding: 10px; margin-left: 50px; margin-top: 20px; font-family: 'Montserrat', sans-serif; font-size: 15px;" type="text" name="userName" id="userName" v-model="user.fullName">
+    <br><br>
+    <div style="float: left; margin-left: 2px">
+      <label for="bio">Bio: </label>
+      </div>
+            <textarea v-model="user.bio" name="bio" id="bio" rows="4" cols="30" style="margin-left: 115px; font-family: 'Montserrat', sans-serif; font-size: 15px; padding: 10px" placeholder="Write your awesome bio..."></textarea>
+              <br><br>
+              <div style="float: left">
+                <label for="avatar">Avatar: </label>
+              </div>
+              <img style="width: 70px; height: 70px; margin-left: 100px; object-position: center; object-fit: cover; border-radius: 100px; border: 1px solid black" :src="user.profileImageUrl ? user.profileImageUrl : '/images/userprofile.png'" id="avatar">
+              <div style="margin-top: -30px; height: 50px">
+                <input type="file" v-on:change="handleAvatarChange" style="padding-left: 250px">
+                </div>
+              <br>
+              <button v-on:click="handleUpdateChanges" type="button" name="button" style=" background-color: black; color: white; font-size: 16px; padding: 10px 24px; border-radius: 10px; margin-left: 200px"> Update </button>
+            </form>
+        </div>
+
+        </div>
+
+
+      </div>
+        <br><br>
+        <div v-for="p in user.posts">
+          <%- partial('../../partials/postBody') %>
+          <br>
+        </div>
+  </div>
+  <script>
+    const user = window.SAILS_LOCALS.user
+    // user.profileImageUrl = '/images/userprofile.png'
+      var app = new Vue({
+      el: '#app',
+      data: {
+        user: window.SAILS_LOCALS.user,
+        avatarFile: null
+      },
+      methods: {
+        handleAvatarChange: function(event) {
+          this.avatarFile = event.target.files[0]
+          this.user.profileImageUrl = window.URL.createObjectURL(this.avatarFile)
+
+        },
+
+        handleUpdateChanges: async function() {
+          const formData = new FormData()
+          formData.append('fullName', this.user.fullName) //'fullName' is coming from the Model objects
+          formData.append('bio', this.user.bio)
+          formData.append('imageUrl', this.avatarFile)
+           try {
+             await axios.post('/profile', formData) //yo chahe update garcha sending a post request which raises the event
+             location.reload()
+           } catch (e) {
+             console.error(e.toString());
+           }
+        }
+
+      }
+    })
+  </script>

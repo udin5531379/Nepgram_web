@@ -1,0 +1,328 @@
+<style>
+
+  .createButton{
+    width: 100%;
+    padding: 10px;
+    margin: 10px;
+    background-color: Lightgrey;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 10px
+}
+
+  .createButton:hover{
+    background: white;
+  }
+
+  .createButtonAttheTopInHomePage{
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    margin: 10px auto;
+    width: 75%;
+    height: 70px;
+    border-radius: 10px;
+  }
+
+  .deleteButton {
+    border: none;
+    background-color: #B93838;
+    transition: transform .2s;
+    color: white;
+    border-radius: 10px;
+    padding: 10px;
+
+    width: 120px;
+    height: 45px;
+    font-size: 15px
+
+  }
+
+  .deleteButton:hover {
+    transform: scale(1.08);
+  }
+
+  .container {
+    background-color: white;
+    padding: 12px;
+    border-radius: 10px;
+    position: relative;
+    width: 50%;
+    margin: 10px auto;
+  }
+
+/*yo bhanda tala ko css for modal*/
+
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 1; /* Sit on top */
+      left: 0;
+      top: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgb(0,0,0); /* Fallback color */
+      background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
+
+      -webkit-animation-name: fadeIn; /* Fade in the background */
+      -webkit-animation-duration: 0.4s;
+      animation-name: fadeIn;
+      animation-duration: 0.4s
+    }
+
+    /* Modal Content */
+    .modal-content {
+      margin: 300px auto; /*top bata chahe 300px and auto bhaney chahe horizontally center huncha*/
+      display: block;
+      width: 80%;
+
+      background-color: #fefefe;
+      -webkit-animation-name: slideIn;
+      -webkit-animation-duration: 0.4s;
+      animation-name: slideIn;
+      animation-duration: 0.4s
+    }
+
+    /* The Close Button */
+    .close {
+      color: black;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .modal-header {
+      padding: 2px 16px;
+      background-color: white;
+      color: white;
+    }
+
+    .modal-body {
+      text-align: center
+    }
+
+    .Button {
+      transition: transform .2s;
+    }
+
+    .Button:hover{
+      transform: scale(1.08);
+    }
+
+    #loader{
+        position:fixed;
+        width:100%;
+        left:0;right:0;top:0;bottom:0;
+        background-color: rgba(255,255,255,0.7);
+        z-index:9999;
+        display:none;
+    }
+
+    #loader:after {
+      content: '';
+      display: block;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 100px;
+      height: 100px;
+      border: 16px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 16px solid #777777;
+      width: 120px;
+      height: 120px;
+      -webkii-animation: spin 2s linear infinite;
+      animation: spin 2s linear infinite;
+      box-shadow: 0px 10px 10px 10px rgba(0, 0, 0, 0.2), 0 6px 20px 10px rgba(0, 0, 0, 0.19);
+
+    }
+
+    @-webkit-keyframes spin {
+      0% { -webkit-transform: rotate(0deg); }
+      100% { -webkit-transform: roatate(360deg); }
+    }
+     @keyframes spin {
+       0% {transform: rotate(0deg); }
+       100% {transform: rotate(360deg); }
+     }
+
+    .modalToCreate {
+      -webkit-animation-name: fadeIn; /* Fade in the background */
+      -webkit-animation-duration: 0.4s;
+      animation-name: fadeIn;
+      animation-duration: 0.4s;
+
+      background-color: rgba(0,0,0, 0.8);
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1
+    }
+
+    .contentsInsidePostModal{
+
+      -webkit-animation-name: slideIn;
+      -webkit-animation-duration: 0.4s;
+      animation-name: slideIn;
+      animation-duration: 0.4s
+
+    }
+
+    .flex-container{
+      display: flex;
+      flex-wrap: wrap;
+      height: auto;
+
+    }
+
+      textarea{
+        position: absolute;
+        max-height: 100px;
+        max-width: 90%;
+        padding: 10px;
+        margin: 10px 10px 10px 10px;
+        border-color: white;
+        border-radius: 10px;
+        background-color: Lightgrey;
+        font-size: 15px;
+      }
+
+      /* input[type="file"] {
+        display: none;
+      } */
+      .image-upload>input {
+        display: none;
+      }
+
+      #uploadIcon{
+        width: 25px;
+
+      }
+      .chooseAPicture {
+        /* height: 25px;
+        width: 100px;
+        font-size: 13px;
+        background-color: #004aad;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        margin: 10px;
+        border-radius: 10px;
+        text-align: center;
+        padding: 15px 0 10px 0;
+        color: white;
+        transition: transform 0.2s;
+        cursor: pointer */
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        margin: 10px;
+        padding-left: 5px
+
+      }
+
+    .chooseAPicture:hover{
+      transform: scale(1.08);
+      opacity: 0.5;
+    }
+
+    .chooseAPicture:focus-within {
+      background: #ff8;
+      color: black;
+    }
+
+    .postButton{
+      position: absolute;
+      height: 50px;
+      width: 100px;
+      right: 0;
+      bottom: 0;
+      margin-right: 120px;
+      margin-bottom: 10px;
+      background-color: #004aad;
+      color: white;
+      border-radius: 10px;
+      border-width: thin;
+      border-style: solid;
+      transition: transform 0.2s;
+
+    }
+
+    .postButton:hover{
+
+      transform: scale(1.08);
+
+    }
+
+    .cancelButtonInsideModalForPost{
+      position: absolute;
+      height: 50px;
+      width: 100px;
+      right: 0;
+      bottom: 0;
+      margin: 10px;
+      background-color: #B93838;
+      color: white;
+      border-radius: 10px;
+      border-width: thin;
+      border-style: solid;
+      transition: transform 0.2s;
+    }
+
+    .cancelButtonInsideModalForPost:hover{
+
+      transform: scale(1.08);
+
+    }
+
+
+    /* Add Animation */
+    @-webkit-keyframes slideIn {
+      from {bottom: -300px; opacity: 0}
+      to {bottom: 0; opacity: 1}
+    }
+
+    @keyframes slideIn {
+      from {bottom: -300px; opacity: 0}
+      to {bottom: 0; opacity: 1}
+    }
+
+    @-webkit-keyframes fadeIn {
+      from {opacity: 0}
+      to {opacity: 1}
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0}
+      to {opacity: 1}
+    }
+
+     /* this is for the screen width of 320px and less ie. iphone 5 */
+     @media only screen and (max-width: 320px){
+       .postButton{
+         width: 70px;
+         margin-right: 100px
+       }
+
+       .cancelButtonInsideModalForPost{
+         width: 70px
+       }
+
+     }
+
+     [v-cloak] { display:none;}
+
+
+<style/>
