@@ -67,31 +67,4 @@ module.exports = async function(req, res) {
         res.redirect('/post')
       })
 }
-    //   file.upload({
-    //   adapter: require('skipper-s3'),
-    //   key: 'AKIAIEARCOUXPL7U7CDA',
-    //   secret: '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',
-    //   bucket: 'nepgram-bucket'
-    //   },
-    //
-    // function (err, filesUploaded) {
-    //
-    //   if (err) return res.serverError(err);
-    //
-    //   console.log(filesUploaded);
-    //   return res.ok({
-    //
-    //     files: filesUploaded,
-    //     textParams: req.allParams()
-    //
-    //   });
-    //
-    // });
-
-  // return res.end()
-  //
-  //
-  //
-  // //waterline object
-
-  // res.redirect('/post')
+   
